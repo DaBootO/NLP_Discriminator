@@ -18,7 +18,8 @@ def load_workbook_range(range_string, ws):
 items = 12
 letters = string.ascii_uppercase
 
-directory_base_data = os.path.abspath(os.path.realpath(__file__)[:-len(os.path.basename(__file__))] + "../base_data/") + '/'
+directory_base = os.path.abspath(os.path.realpath(__file__)[:-len(os.path.basename(__file__))] + "../base_data/") + '/'
+directory_base_data = os.path.abspath(os.path.realpath(__file__)[:-len(os.path.basename(__file__))] + "../base_data/training/") + '/'
 
 DF_list = []
 
@@ -66,5 +67,5 @@ col_dict = {string.ascii_uppercase[i]: column_names[i] for i in range(14)}
 Data.rename(col_dict, axis=1, inplace=True)
 Data.reset_index(drop=True, inplace=True)
 
-Data.to_json(os.path.join(directory_base_data, "data.json"))
-Data.to_json(os.path.join(directory_base_data, f"data{time.strftime('%H%M%S_%d%m%y')}.json"))
+Data.to_json(os.path.join(directory_base, "data_training.json"))
+Data.to_json(os.path.join(directory_base, f"data_training{time.strftime('%H%M%S_%d%m%y')}.json"))
