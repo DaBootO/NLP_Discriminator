@@ -2,6 +2,8 @@
 import pandas as pd
 import numpy as np
 import os
+import io
+import json
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from keras.preprocessing.text import Tokenizer
@@ -62,6 +64,11 @@ print("### TOKENIZING ###")
 
 tokenizer = Tokenizer(num_words=15000)
 tokenizer.fit_on_texts(data['title'])
+
+print("### SAVING TOKENIZER ###")
+tokenizer_json = tokenizer.to_json()
+with io.open(os.path.join(directory_base, 'tokenizer.json'), 'w', encoding='utf-8') as f:
+    f.write(json.dumps(tokenizer_json, ensure_ascii=False))
 
 vocab_size = len(tokenizer.word_index) + 1
 
