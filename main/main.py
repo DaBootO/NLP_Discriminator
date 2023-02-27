@@ -13,15 +13,16 @@ from keras.callbacks import EarlyStopping
 
 print("### READ IN DATA ###")
 
+directory_base = os.path.abspath(os.path.realpath(__file__)[:-len(os.path.basename(__file__))] + "../") + '/'
 directory_base_data = os.path.abspath(os.path.realpath(__file__)[:-len(os.path.basename(__file__))] + "../base_data/") + '/'
 
-data = pd.read_json(os.path.join(directory_base_data, 'data.json'))
+data = pd.read_json(os.path.join(directory_base_data, 'data_training.json'))
 
 print("### CREATE TEST CASES ###")
 
 data_sub = data[data['0/1'].apply(lambda x: x == 0 or x == 1)][['0/1', 'title']]
 
-print(data_sub.shape)
+# print(data_sub.shape)
 
 data_train, data_test = train_test_split(
     data_sub,
@@ -30,8 +31,8 @@ data_train, data_test = train_test_split(
     stratify=data_sub['0/1']
 )
 
-print(data_train.shape)
-print(data_test.shape)
+# print(data_train.shape)
+# print(data_test.shape)
 
 data_test, data_val = train_test_split(
     data_test,
@@ -40,8 +41,8 @@ data_test, data_val = train_test_split(
     stratify=data_test['0/1']
 )
 
-print(data_test.shape)
-print(data_val.shape)
+# print(data_test.shape)
+# print(data_val.shape)
 
 print("We have the following labels and counts:")
 print(data_sub.groupby('0/1').count())
@@ -112,12 +113,12 @@ early_stopping = EarlyStopping(
     restore_best_weights=True)
 
 ## DEBUG
-print(type(X_train))
-print(type(y_train))
-print(type(X_test))
-print(type(y_test))
-print(type(X_val))
-print(type(y_val))
+# print(type(X_train))
+# print(type(y_train))
+# print(type(X_test))
+# print(type(y_test))
+# print(type(X_val))
+# print(type(y_val))
 
 
 ## class weight is given since the dataset is imbalanced.
@@ -133,7 +134,7 @@ history = model.fit(
     epochs=100,
     verbose=True,
     validation_data=(X_val, y_val),
-    batch_size=50,
+    batch_size=100,
     # class_weight=class_weight,
     callbacks=[early_stopping]
 )
@@ -144,3 +145,6 @@ y_pred_test_prob = model.predict(X_test)
 y_pred_test = [1 if x>0.5 else 0 for x in y_pred_test_prob]
 
 print(classification_report(y_pred_test,y_test))
+
+print("### SAVE MODEL ###")
+model.save(os.path.join(directory_base, "model"))
