@@ -127,7 +127,6 @@ early_stopping = EarlyStopping(
 # print(type(X_val))
 # print(type(y_val))
 
-
 ## class weight is given since the dataset is imbalanced.
 
 class_weight = {
